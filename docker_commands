@@ -1,0 +1,25 @@
+# Build the TechTrends image from the Dockerfile in the project directory.
+docker build -t techtrends -f Dockerfile .
+
+# Run TechTrends in detached mode and expose container port 3111 as host port 7111.
+docker run -d --name techtrends -p 7111:3111 techtrends
+
+# Inspect the running container.
+docker ps
+
+# Retrieve application logs.
+docker logs techtrends
+
+# Optional live log view while testing pages/endpoints.
+docker logs -f techtrends
+
+# Test endpoints from the host.
+curl http://127.0.0.1:7111/healthz
+curl http://127.0.0.1:7111/metrics
+
+# -----------------------------------------------------------------------------
+# SUBMISSION NOTE:
+# After running the container and exercising the site, paste the ACTUAL output
+# from `docker logs techtrends` below this line before submitting the project.
+# Do not submit fabricated logs.
+# -----------------------------------------------------------------------------
