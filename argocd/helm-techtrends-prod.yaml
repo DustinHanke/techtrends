@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY.git
+    repoURL: https://github.com/DustinHanke/techtrends.git
     targetRevision: main
     path: helm
     helm:
