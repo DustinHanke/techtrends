@@ -1,0 +1,21 @@
+name: Export Project Archive
+
+on:
+  push:
+    branches:
+      - chatgpt-export-project
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Upload project files
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-export
+          include-hidden-files: true
+          path: |
+            .
+            !.git
