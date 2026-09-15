@@ -6,12 +6,29 @@ from threading import Lock
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 
 
-# Configure application/Python logging to STDOUT at DEBUG level.
+class BelowErrorFilter(logging.Filter):
+    def filter(self, record):
+        return record.levelno < logging.ERROR
+
+
+formatter = logging.Formatter(
+    "%(levelname)s:%(name)s:%(asctime)s, %(message)s",
+    datefmt="%m/%d/%Y, %H:%M:%S",
+)
+
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setLevel(logging.DEBUG)
+stdout_handler.addFilter(BelowErrorFilter())
+stdout_handler.setFormatter(formatter)
+
+stderr_handler = logging.StreamHandler(sys.stderr)
+stderr_handler.setLevel(logging.ERROR)
+stderr_handler.setFormatter(formatter)
+
 logging.basicConfig(
     level=logging.DEBUG,
-    format="%(levelname)s:%(name)s:%(asctime)s, %(message)s",
-    datefmt="%m/%d/%Y, %H:%M:%S",
-    stream=sys.stdout,
+    handlers=[stdout_handler, stderr_handler],
+    force=True,
 )
 
 # Track successful database connections for the /metrics endpoint.
@@ -97,7 +114,7 @@ def metrics():
 def post(post_id):
     post_record = get_post(post_id)
     if post_record is None:
-        app.logger.warning(
+        app.logger.error(
             "Non-existing article with ID %s accessed; 404 page returned!", post_id
         )
         return render_template("404.html"), 404
